@@ -29,4 +29,45 @@ exports.handler = async (event, context) => {
 			})
 		}
 	}
+
+	try {
+		await stripe.customers
+			.create({
+				email: data.stripeEmail,
+				source: data.stripeToken
+			})
+			.then(customer => {
+				console.log(`starting the charges, amt: ${data.stripeAmt}, email: ${data.stripeEmail}`);
+
+				return stripe.charges
+					.create({
+						currency: "GBP",
+						amount: data.stripeAmt,
+						receipt_email: data.stripeEmail,
+						customer: customer.id,
+						description: "Sample Charge"
+					},
+					{
+						idempotency_key: data.stripeIdempotency
+					})
+					.then(result => {
+						console.log(`Charge created: ${result}`)
+					})
+			})
+
+			return {
+				statusCode: 200,
+				headers
+			}
+	} catch (err) {
+		console.log(err)
+
+		return {
+			statusCode: 400,
+			headers,
+			body: JSON.stringify({
+				status: err
+			})
+		}
+	}
 }
