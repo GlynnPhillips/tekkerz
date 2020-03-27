@@ -1,5 +1,6 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const querystring = require('querystring');
+const { uuid } = require('uuidv4');
 
 const headers = {
 	"Access-Control-Allow-Origin": "*",
@@ -20,7 +21,10 @@ exports.handler = async (event, context) => {
 
 	const paymentData = querystring.parse(event.body);
 
-	if (!paymentData.stripeToken || !paymentData.stripeAmt || !paymentData.stripeIdempotency) {
+	console.log(paymentData)
+	console.log(paymentData.stripeToken)
+	console.log(paymentData.stripeAmt)
+	if (!paymentData.stripeToken || !paymentData.stripeAmt) {
 		console.error('Missing Stripe data in payload')
 		return {
 			statusCode: 400,
@@ -34,22 +38,22 @@ exports.handler = async (event, context) => {
 	try {
 		await stripe.customers
 			.create({
-				email: data.stripeEmail,
-				source: data.stripeToken
+				email: 'foo@example.com',
+				source: paymentData.stripeToken
 			})
 			.then(customer => {
-				console.log(`starting the charges, amt: ${data.stripeAmt}, email: ${data.stripeEmail}`);
+				console.log(`starting the charges, amt: ${paymentData.stripeAmt}`);
 
 				return stripe.charges
 					.create({
 						currency: "GBP",
-						amount: data.stripeAmt,
-						receipt_email: data.stripeEmail,
+						amount: paymentData.stripeAmt,
+						receipt_email: 'foo@example.com',
 						customer: customer.id,
 						description: "Sample Charge"
 					},
 					{
-						idempotency_key: data.stripeIdempotency
+						idempotency_key: uuid()
 					})
 					.then(result => {
 						console.log(`Charge created: ${result}`)

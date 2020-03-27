@@ -11,6 +11,7 @@
     "url": "https://github.com/GlynnPhillips/tekkerz/issues"
   },
   "dependencies": {
-    "stripe": "^8.37.0"
+    "stripe": "^8.37.0",
+    "uuidv4": "^6.0.6"
   }
 }
