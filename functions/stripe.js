@@ -14,4 +14,17 @@ exports.handler = async (event, context) => {
 			})
 		}
 	}
+
+	const paymentData = JSON.parse(event.body)
+
+	if (!paymentData.stripeToken || !paymentData.stripeAmt || !paymentData.stripeIdempotency) {
+		console.error('Missing Stripe data in payload')
+		return {
+			statusCode: 400,
+			headers,
+			body: JSON.stringify({
+				status: 'Bad request'
+			})
+		}
+	}
 }
