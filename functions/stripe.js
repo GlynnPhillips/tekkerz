@@ -18,8 +18,7 @@ exports.handler = async (event, context) => {
 		}
 	}
 
-	console.log(querystring.parse(event.body))
-	const paymentData = JSON.parse(event.body)
+	const paymentData = querystring.parse(event.body);
 
 	if (!paymentData.stripeToken || !paymentData.stripeAmt || !paymentData.stripeIdempotency) {
 		console.error('Missing Stripe data in payload')
