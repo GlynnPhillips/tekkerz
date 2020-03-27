@@ -1,4 +1,5 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const querystring = require('querystring');
 
 const headers = {
 	"Access-Control-Allow-Origin": "*",
@@ -17,6 +18,7 @@ exports.handler = async (event, context) => {
 		}
 	}
 
+	console.log(querystring.parse(event.body))
 	const paymentData = JSON.parse(event.body)
 
 	if (!paymentData.stripeToken || !paymentData.stripeAmt || !paymentData.stripeIdempotency) {
