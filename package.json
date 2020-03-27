@@ -1,0 +1,13 @@
+{
+  "name": "tekkerz",
+  "version": "1.0.0",
+  "description": "🦖",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GlynnPhillips/tekkerz.git"
+  },
+  "author": "Glynn Phillips",
+  "bugs": {
+    "url": "https://github.com/GlynnPhillips/tekkerz/issues"
+  }
+}
